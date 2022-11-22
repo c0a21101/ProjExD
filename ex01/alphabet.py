@@ -51,6 +51,6 @@ if __name__ == "__main__":
             print("不正解です。")
             print("-" * 20)
     else:
-        print("解答権がなくなりました。残念！w")
+        print("解答権がなくなりました。残念。")
     ed = datetime.datetime.now()
     print(f"実行時間：{(ed - st).seconds} 秒")
