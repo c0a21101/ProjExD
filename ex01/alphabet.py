@@ -53,4 +53,4 @@ if __name__ == "__main__":
     else:
         print("解答権がなくなりました。残念！w")
     ed = datetime.datetime.now()
-    print("実行時間：" + str((ed - st).seconds) + "秒")
+    print(f"実行時間：{(ed - st).seconds} 秒")
