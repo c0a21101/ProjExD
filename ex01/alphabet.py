@@ -6,6 +6,7 @@ TARGET_AMT = 10
 DELETE_AMT = 2
 MAX_ANSWER = 3
 
+
 def target():
     alphabet = random.sample(string.ascii_uppercase, TARGET_AMT)
     print("対象文字：")
