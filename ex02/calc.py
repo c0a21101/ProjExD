@@ -5,7 +5,12 @@ import tkinter.messagebox as tkm
 def button_click(event):
     btn = event.widget
     txt = btn["text"]
-    entry.insert(tk.END, txt)
+    if txt == "=":
+        formula = entry.get()
+        entry.delete(0, tk.END)
+        entry.insert(tk.END, eval(formula))
+    else:
+        entry.insert(tk.END, txt)
 
 root = tk.Tk()
 root.geometry("300x500")
@@ -29,8 +34,7 @@ for i in range(len(operators)):
                               height = "2",
                               font = ("", 30))
     button_ope[i].grid(row = 4, column = 1 + i)
-    if operators[i] != "=":
-        button_ope[i].bind("<1>", button_click)
+    button_ope[i].bind("<1>", button_click)
 
 entry = tk.Entry(justify = "right",
                  width = 30,
