@@ -5,16 +5,25 @@ import tkinter.messagebox as tkm
 def button_click(event):
     btn = event.widget
     txt = btn["text"]
+            
     if txt == "=":
         formula = entry.get()
         entry.delete(0, tk.END)
         entry.insert(tk.END, eval(formula))
     else:
-        if txt == "×":
-            txt = "*"
-        if txt == "÷":
-            txt = "/"
-        entry.insert(tk.END, txt)
+        if txt in operators:
+            if entry.get()[-1].isdecimal() == True:
+                if txt == "×":
+                    txt = "*"
+                if txt == "÷":
+                    txt = "/"
+                entry.insert(tk.END, txt)
+        else:
+            entry.insert(tk.END, txt)
+
+        if entry.get()[0] == "0":
+            if entry.get()[1] != ".":
+                entry.delete(0, 1)
 
 root = tk.Tk()
 root.geometry("400x600")
@@ -46,6 +55,7 @@ for i in range(len(operators)):
 entry = tk.Entry(justify = "right",
                  width = 42,
                  font = 40)
+entry.insert(tk.END, "0")
 entry.grid(row = 0, column = 0, columnspan = 4)
 
 root.mainloop()
