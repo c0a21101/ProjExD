@@ -49,10 +49,8 @@ def button_click(event):
         else:
             entry.insert(tk.END, txt)
         #頭に余分な0があったら消す
-        if len(entry.get()) > 1:
-            if entry.get()[0] == "0":
-                if entry.get()[1] != ".":
-                    entry.delete(0, 1)
+        if len(entry.get()) > 1 and entry.get()[0] == "0" and entry.get()[1] != ".":
+            entry.delete(0, 1)
 
 #初期設定
 root = tk.Tk()
