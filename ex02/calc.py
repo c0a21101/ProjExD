@@ -10,14 +10,19 @@ def button_click(event):
 root = tk.Tk()
 root.geometry("300x500")
 
-button = [0] * 10
-for i in range(10):
-    button[i] = tk.Button(root,
-                        text = str(i),
-                        width = "4",
-                        height = "2",
-                        font = ("", 30))
-    button[i].grid(row = 3 - (i+2)//3, column = 3 - (i-1)%3)
-    button[i].bind("<1>", button_click)
+button_num = [0] * 10
+for i in range(len(button_num)):
+    button_num[i] = tk.Button(root,
+                              text = str(i),
+                              width = "4",
+                              height = "2",
+                              font = ("", 30))
+    button_num[i].grid(row = 4 - (i+2)//3, column = 2 - (i-1)%3)
+    button_num[i].bind("<1>", button_click)
+
+entry = tk.Entry(justify = "right",
+                 width = 30,
+                 font = 40)
+entry.grid(row = 0, column = 0, columnspan = 3)
 
 root.mainloop()
