@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.messagebox as tkm
 import maze_maker
 import random
 import copy
@@ -39,6 +40,15 @@ def main_proc():
     else:
         canvas.create_image(cx,cy,image=images[0],tag="player")
     root.after(50, main_proc)
+
+    #ゴールの判定
+    if mx == gx and my == gy:
+        goal()
+
+
+#ゴール時の処理
+def goal():
+    tkm.showinfo("ゴール", "おめでとうございます！あなたはゴールしました！")
 
 
 # ゴール生成アルゴリズム
