@@ -7,13 +7,13 @@ def main_proc():
     global mx, my
 
     # 十字キーが押されていたらその方向にこうかとんを移動させる
-    if key == "Up":
+    if key == "Up" and maze[mx][my-1] == 0:
         my -= 1
-    elif key == "Down":
+    elif key == "Down" and maze[mx][my+1] == 0:
         my += 1
-    elif key == "Left":
+    elif key == "Left" and maze[mx-1][my] == 0:
         mx -= 1
-    elif key == "Right":
+    elif key == "Right" and maze[mx+1][my] == 0:
         mx += 1
     # 座標の更新
     cx = mx * 100 + 50
