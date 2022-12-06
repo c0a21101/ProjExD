@@ -5,22 +5,21 @@ import random
 import copy
 
 
-
 #リアルタイム処理関数
 def main_proc():
     global mx, my, timer
 
     # 十字キーが押されていたらその方向にこうかとんを移動させる
-    if key == "Up" and maze[mx][my-1] == 0:
+    if key == "Up" and maze[mx][my-1] != 1:
         my -= 1
         timer = 0
-    elif key == "Down" and maze[mx][my+1] == 0:
+    elif key == "Down" and maze[mx][my+1] != 1:
         my += 1
         timer = 0
-    elif key == "Left" and maze[mx-1][my] == 0:
+    elif key == "Left" and maze[mx-1][my] != 1:
         mx -= 1
         timer = 0
-    elif key == "Right" and maze[mx+1][my] == 0:
+    elif key == "Right" and maze[mx+1][my] != 1:
         mx += 1
         timer = 0
     else:
@@ -40,15 +39,6 @@ def main_proc():
     else:
         canvas.create_image(cx,cy,image=images[0],tag="player")
     root.after(50, main_proc)
-
-    #ゴールの判定
-    if mx == gx and my == gy:
-        goal()
-
-
-#ゴール時の処理
-def goal():
-    tkm.showinfo("ゴール", "おめでとうございます！あなたはゴールしました！")
 
 
 # ゴール生成アルゴリズム
@@ -94,19 +84,21 @@ if __name__ == "__main__":
 
     # 迷路の生成
     maze = maze_maker.make_maze(15, 9)
-    maze_maker.show_maze(canvas, maze)
 
     # スタート地点の設定
     sx = random.randrange(1,15,2)
     sy = random.randrange(1,9,2)
-    canvas.create_rectangle(sx*100, sy*100, sx*100+100, sy*100+100, fill="blue")
+    maze[sx][sy] = 2
 
     # ゴール地点の設定
     far = copy.deepcopy(maze)
     far[sx][sy] = 1
     queue = [[sx, sy]]
     set_goal(queue[0][0], queue[0][1])
-    canvas.create_rectangle(gx*100, gy*100, gx*100+100, gy*100+100, fill="green")
+    maze[gx][gy] = 3
+
+    # 迷路の描画
+    maze_maker.show_maze(canvas, maze)
 
     # こうかとんの画像を表示
     mx = sx  # こうかとんの横軸のマス
