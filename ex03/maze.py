@@ -1,4 +1,5 @@
 import tkinter as tk
+import maze_maker
 
 
 #リアルタイム処理関数
