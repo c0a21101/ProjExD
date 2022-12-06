@@ -6,6 +6,11 @@ def key_down(event):
     key = event.keysym
 
 
+def key_up(event):
+    global key
+    key = ""
+
+
 if __name__ == "__main__":
     # ウィンドウ生成
     root = tk.Tk()
@@ -25,5 +30,8 @@ if __name__ == "__main__":
 
     # key_down()
     root.bind("<KeyPress>", key_down)
+
+    # key_up()
+    root.bind("<KeyRelease>", key_up)
 
     root.mainloop()
