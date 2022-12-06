@@ -1,6 +1,11 @@
 import tkinter as tk
 
 
+def key_down(event):
+    global key
+    key = event.keysym
+
+
 if __name__ == "__main__":
     # ウィンドウ生成
     root = tk.Tk()
@@ -17,5 +22,8 @@ if __name__ == "__main__":
     canvas.pack()
 
     key = ""  # 現在押されているキー
+
+    # key_down()
+    root.bind("<KeyPress>", key_down)
 
     root.mainloop()
