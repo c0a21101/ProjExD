@@ -16,4 +16,6 @@ if __name__ == "__main__":
     canvas.create_image(cx,cy,image=image)
     canvas.pack()
 
+    key = ""  # 現在押されているキー
+
     root.mainloop()
