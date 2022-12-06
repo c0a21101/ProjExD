@@ -48,6 +48,9 @@ if __name__ == "__main__":
 
     key = ""  # 現在押されているキー
 
+    # 迷路の生成
+    maze = maze_maker.make_maze(15, 9)
+
     main_proc()
 
     # key_down()
