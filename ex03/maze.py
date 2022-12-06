@@ -39,6 +39,10 @@ if __name__ == "__main__":
     # 背景が黒色のCanvasを生成
     canvas = tk.Canvas(width=1500,height=900,bg="black")
 
+    # 迷路の生成
+    maze = maze_maker.make_maze(15, 9)
+    maze_maker.show_maze(canvas, maze)
+
     # こうかとんの画像を表示
     cx = 300  # こうかとんの横軸の現在地
     cy = 400  # こうかとんの縦軸の現在地
@@ -47,9 +51,6 @@ if __name__ == "__main__":
     canvas.pack()
 
     key = ""  # 現在押されているキー
-
-    # 迷路の生成
-    maze = maze_maker.make_maze(15, 9)
 
     main_proc()
 
