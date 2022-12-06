@@ -4,24 +4,39 @@ import maze_maker
 
 #リアルタイム処理関数
 def main_proc():
-    global mx, my
+    global mx, my, timer
 
     # 十字キーが押されていたらその方向にこうかとんを移動させる
     if key == "Up" and maze[mx][my-1] == 0:
         my -= 1
+        timer = 0
     elif key == "Down" and maze[mx][my+1] == 0:
         my += 1
+        timer = 0
     elif key == "Left" and maze[mx-1][my] == 0:
         mx -= 1
+        timer = 0
     elif key == "Right" and maze[mx+1][my] == 0:
         mx += 1
+        timer = 0
+    else:
+        timer += 1
+    print(timer)
+    
     # 座標の更新
     cx = mx * 100 + 50
     cy = my * 100 + 50
-
-    # 座標の更新
     canvas.coords("player",cx,cy)
-    root.after(80, main_proc)
+
+    # 画像の更新
+    canvas.delete('player')	
+    if timer <= 4:
+        canvas.create_image(cx,cy,image=images[2],tag="player")
+    elif timer <= 20:
+        canvas.create_image(cx,cy,image=images[1],tag="player")
+    else:
+        canvas.create_image(cx,cy,image=images[0],tag="player")
+    root.after(50, main_proc)
 
 
 def key_down(event):
@@ -51,12 +66,15 @@ if __name__ == "__main__":
     my = 1  # こうかとんの縦軸のマス
     cx = mx * 100 + 50  # こうかとんの横軸の座標
     cy = my * 100 + 50  # こうかとんの縦軸の座標
-    image = tk.PhotoImage(file="fig/0.png")
-    canvas.create_image(cx,cy,image=image,tag="player")
+    images = [tk.PhotoImage(file="fig/0.png"),
+              tk.PhotoImage(file="fig/2.png"),
+              tk.PhotoImage(file="fig/3.png")]
+    canvas.create_image(cx,cy,image=images[1],tag="player")
     canvas.pack()
 
     key = ""  # 現在押されているキー
 
+    timer = 0  # こうかとんが動いてからの時間
     main_proc()
 
     # key_down()
