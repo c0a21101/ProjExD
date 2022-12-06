@@ -4,21 +4,24 @@ import maze_maker
 
 #リアルタイム処理関数
 def main_proc():
-    global cx, cy
+    global mx, my
 
     # 十字キーが押されていたらその方向にこうかとんを移動させる
     if key == "Up":
-        cy -= 20
+        my -= 1
     elif key == "Down":
-        cy += 20
+        my += 1
     elif key == "Left":
-        cx -= 20
+        mx -= 1
     elif key == "Right":
-        cx += 20
+        mx += 1
+    # 座標の更新
+    cx = mx * 100 + 50
+    cy = my * 100 + 50
 
     # 座標の更新
     canvas.coords("player",cx,cy)
-    root.after(20, main_proc)
+    root.after(80, main_proc)
 
 
 def key_down(event):
@@ -44,8 +47,10 @@ if __name__ == "__main__":
     maze_maker.show_maze(canvas, maze)
 
     # こうかとんの画像を表示
-    cx = 300  # こうかとんの横軸の現在地
-    cy = 400  # こうかとんの縦軸の現在地
+    mx = 1  # こうかとんの横軸のマス
+    my = 1  # こうかとんの縦軸のマス
+    cx = mx * 100 + 50  # こうかとんの横軸の座標
+    cy = my * 100 + 50  # こうかとんの縦軸の座標
     image = tk.PhotoImage(file="fig/0.png")
     canvas.create_image(cx,cy,image=image,tag="player")
     canvas.pack()
