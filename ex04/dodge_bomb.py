@@ -74,16 +74,19 @@ def main():
         scrn_sfc.blit(tori_sfc, tori_rct)
 
         # 爆弾の描写
-        for i in range(len(bomb_rct)-1):
+        for i in range(len(bomb_rct)):
             bomb_rct[i].move_ip(vx[i], vy[i])
             yoko, tate = check_bound(bomb_rct[i], scrn_rct)
             vx[i] *= yoko 
             vy[i] *= tate
             scrn_sfc.blit(bomb_sfc, bomb_rct[i])
             # こうかとんとの接触判定
+            # 接触時に爆弾を全部消す
             if bomb_rct[i].colliderect(tori_rct):
-                print("当たってるよ雑魚" + str(random.random()))
+                bomb_rct, vx, vy = [], [], []
+                break
 
+        # 爆弾を時間経過で増やす
         if frame % 1000 == 999:
             bomb_rct += [bomb_sfc.get_rect()]
             bomb_rct[-1].center = random.randint(10,scrn_rct.width-10), random.randint(10,scrn_rct.height-10)
