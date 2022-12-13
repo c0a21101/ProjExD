@@ -90,8 +90,8 @@ def main():
             scrn_sfc.blit(bomb_sfc, bomb_rct[i])
             # こうかとんとの接触判定
             if bomb_rct[i].colliderect(tori_rct):
-                # スコアを減らす
-                score -= 10000
+                # スコアを0にする
+                score = 0
                 # 接触時に爆弾を全部消す
                 bomb_rct, vx, vy = [], [], []
                 break
