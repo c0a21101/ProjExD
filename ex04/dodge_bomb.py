@@ -37,10 +37,18 @@ def main():
     bomb_sfc.set_colorkey((0, 0, 0))
     pg.draw.circle(bomb_sfc, (255, 0, 0), (10,10), 10)
     bomb_rct = [bomb_sfc.get_rect()]
-    bomb_rct[0].center = random.randint(10,scrn_rct.width-10), random.randint(10,scrn_rct.height-10)
+    bomb_rct[0].center = random.randint(10,scrn_rct.width-10), 10
     vx, vy = [1], [1]
 
+    # テキスト生成
+    font = pg.font.Font("/Windows/Fonts/meiryo.ttc", 40)
+    text_sfc = font.render("", True, (0, 0, 0))
+    text_rct = text_sfc.get_rect()
+    text_rct.topleft = 30, 15
+
     frame = 0  # 経過したフレームの数
+    score = 0  # 現在のスコア
+    high_score = 0  # 起動してからの最高のスコア
 
     while True:
         # 背景の描画
@@ -81,17 +89,29 @@ def main():
             vy[i] *= tate
             scrn_sfc.blit(bomb_sfc, bomb_rct[i])
             # こうかとんとの接触判定
-            # 接触時に爆弾を全部消す
             if bomb_rct[i].colliderect(tori_rct):
+                # スコアを減らす
+                score -= 10000
+                # 接触時に爆弾を全部消す
                 bomb_rct, vx, vy = [], [], []
                 break
-
-        # 爆弾を時間経過で増やす
+        
+        # 1000フレームごとの処理
         if frame % 1000 == 999:
+            # 現在の爆弾の数に応じてスコアを増やす
+            score += len(bomb_rct) * 100
+            high_score = max(score, high_score)
+
+            # 爆弾を時間経過で増やす
             bomb_rct += [bomb_sfc.get_rect()]
-            bomb_rct[-1].center = random.randint(10,scrn_rct.width-10), random.randint(10,scrn_rct.height-10)
+            bomb_rct[-1].center = random.randint(10,scrn_rct.width-10), 10
             vx += [1]
             vy += [1]
+
+
+        # テキストの描画
+        scrn_sfc.blit(text_sfc, text_rct)
+        text_sfc = font.render(f"スコア：{score} ハイスコア：{high_score}", True, (0, 0, 0))
 
         pg.display.update()
         frame += 1
