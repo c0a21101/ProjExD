@@ -61,23 +61,19 @@ def main():
 
         # こうかとんの描写
         key_dct = pg.key.get_pressed()
-        if key_dct[pg.K_UP]:
-            tori_rct.centery -= 1
-        if key_dct[pg.K_DOWN]:
-            tori_rct.centery += 1
-        if key_dct[pg.K_LEFT]:
-            tori_rct.centerx -= 1
-        if key_dct[pg.K_RIGHT]:
-            tori_rct.centerx += 1
-        if check_bound(tori_rct, scrn_rct) != (1, 1):
+        def move(n):
             if key_dct[pg.K_UP]:
-                tori_rct.centery += 1
+                tori_rct.centery -= n
             if key_dct[pg.K_DOWN]:
-                tori_rct.centery -= 1
+                tori_rct.centery += n
             if key_dct[pg.K_LEFT]:
-                tori_rct.centerx += 1
+                tori_rct.centerx -= n
             if key_dct[pg.K_RIGHT]:
-                tori_rct.centerx -= 1
+                tori_rct.centerx += n
+
+        move(1)
+        if check_bound(tori_rct, scrn_rct) != (1, 1):
+            move(-1)
 
         scrn_sfc.blit(tori_sfc, tori_rct)
 
