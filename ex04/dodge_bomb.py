@@ -1,3 +1,4 @@
+import random
 import pygame as pg
 import sys
 
@@ -8,6 +9,7 @@ def main():
     # ウィンドウ生成
     pg.display.set_caption("逃げろ！こうかとん")
     scrn_sfc = pg.display.set_mode((1600,900))
+    scrn_rct = scrn_sfc.get_rect()
 
     # 背景生成
     bg_sfc = pg.image.load("fig/pg_bg.jpg")
@@ -20,19 +22,23 @@ def main():
     tori_rct = tori_sfc.get_rect()
     tori_rct.center = 800, 450
 
+    # 爆弾生成
+    bomb_sfc = pg.Surface((20,20))
+    bomb_sfc.set_colorkey((0, 0, 0))
+    pg.draw.circle(bomb_sfc, (255, 0, 0), (10,10), 10)
+    bomb_rct = bomb_sfc.get_rect()
+    bomb_rct.center = random.randint(10,scrn_rct.width-10), random.randint(10,scrn_rct.height-10)
 
     while True:
-        # 各種オブジェクトの描画
+        # 背景の描画
         scrn_sfc.blit(bg_sfc, bg_rct)
-        scrn_sfc.blit(tori_sfc, tori_rct)
 
-        
-        
         # イベントを繰り返しで処理
         for event in pg.event.get():
             if event.type == pg.QUIT:  # 「×」ボタンが押されたらウィンドウを閉じる
                 return
 
+        # こうかとんの描写
         key_dct = pg.key.get_pressed()
         if key_dct[pg.K_UP]:
             tori_rct.centery -= 1
@@ -42,7 +48,9 @@ def main():
             tori_rct.centerx -= 1
         if key_dct[pg.K_RIGHT]:
             tori_rct.centerx += 1
+        scrn_sfc.blit(tori_sfc, tori_rct)
 
+        scrn_sfc.blit(bomb_sfc, bomb_rct)
         pg.display.update()
         clock.tick(1000)  # 1000fpsの時を刻む
 
