@@ -36,9 +36,11 @@ def main():
     bomb_sfc = pg.Surface((20,20))
     bomb_sfc.set_colorkey((0, 0, 0))
     pg.draw.circle(bomb_sfc, (255, 0, 0), (10,10), 10)
-    bomb_rct = bomb_sfc.get_rect()
-    bomb_rct.center = random.randint(10,scrn_rct.width-10), random.randint(10,scrn_rct.height-10)
-    vx, vy = +1, +1
+    bomb_rct = [bomb_sfc.get_rect()]
+    bomb_rct[0].center = random.randint(10,scrn_rct.width-10), random.randint(10,scrn_rct.height-10)
+    vx, vy = [1], [1]
+
+    frame = 0  # 経過したフレームの数
 
     while True:
         # 背景の描画
@@ -72,15 +74,24 @@ def main():
         scrn_sfc.blit(tori_sfc, tori_rct)
 
         # 爆弾の描写
-        bomb_rct.move_ip(vx, vy)
-        yoko, tate = check_bound(bomb_rct, scrn_rct)
-        vx *= yoko
-        vy *= tate
-        scrn_sfc.blit(bomb_sfc, bomb_rct)
+        for i in range(len(bomb_rct)-1):
+            bomb_rct[i].move_ip(vx[i], vy[i])
+            yoko, tate = check_bound(bomb_rct[i], scrn_rct)
+            vx[i] *= yoko 
+            vy[i] *= tate
+            scrn_sfc.blit(bomb_sfc, bomb_rct[i])
+            # こうかとんとの接触判定
+            if bomb_rct[i].colliderect(tori_rct):
+                print("当たってるよ雑魚" + str(random.random()))
 
-        if tori_rct.colliderect(bomb_rct):
-            return
+        if frame % 1000 == 999:
+            bomb_rct += [bomb_sfc.get_rect()]
+            bomb_rct[-1].center = random.randint(10,scrn_rct.width-10), random.randint(10,scrn_rct.height-10)
+            vx += [1]
+            vy += [1]
+
         pg.display.update()
+        frame += 1
         clock.tick(1000)  # 1000fpsの時を刻む
 
 
