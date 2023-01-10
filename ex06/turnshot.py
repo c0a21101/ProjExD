@@ -33,7 +33,8 @@ class Ship:
         self.sfc = pg.transform.rotate(self.sfc, -90+player*180)
         self.rct = self.sfc.get_rect()
         self.rct.center = xy
-        self.pl = player # 0(左) or 1(右)
+        self.pl = player  # 0(左) or 1(右)
+        self.bullet_lst = []  # 弾のリスト
 
     def blit(self, scr:Screen):
         scr.sfc.blit(self.sfc, self.rct)
@@ -53,28 +54,30 @@ class Ship:
 
 # バレットクラス
 class Bullet:
-    shot_speed = 2  # 弾の発射する速さ
-
-    def __init__(self, img_path, xy, player):
-        self.sfc = pg.image.load(img_path)  # fig_ts/ship_1
+    def __init__(self, img_path, xy, player, bullet_type, vx, vy):
+        self.sfc = pg.image.load(img_path)  
         self.sfc = pg.transform.rotate(self.sfc, -90+player*180)
         self.rct = self.sfc.get_rect()
         self.rct.center = xy
-        self.pl = player # 0(左) or 1(右)
+        self.pl = player  # 0(左) or 1(右)
+        self.bullet_type = bullet_type  # 0(通常) or 1(拡散前)
+        self.vx = vx
+        self.vy = vy
+        self.bullet_lst = []
 
     def blit(self, scr:Screen):
         scr.sfc.blit(self.sfc, self.rct)
 
     # 弾の位置の更新
-    def update(self, scr:Screen, turn):
+    def update(self, scr:Screen, pl:Ship, turn, frame):
         if turn == 0:
-            self.rct.move_ip(Bullet.shot_speed*(1-self.pl*2), 0)
-        scr.sfc.blit(self.sfc, self.rct) 
-
-    # 相手の弾や機体に触れたときの処理
-    def touch(self):
-        pass
-
+            self.rct.move_ip(self.vx, self.vy)
+        if frame % 1500 == 1100 and self.bullet_type == 1:
+            for i in range(-1, 2):
+                self.bullet_lst.append(Bullet("fig_ts/bullet_1.png", self.rct.center, 1, 0, 0, i))
+                self.bullet_type = 0
+        self.blit(scr) 
+        return self.bullet_lst
 
 
 def check_bound(obj_rct, scr_rct):
@@ -99,9 +102,6 @@ def main():
     for i in range(2):
         pl[i].update(scr)
 
-    # 弾のリスト
-    blt_lst = [[],[]]
-
     frame = 0  # 経過フレーム
     turn = 0  # 現在のターン(0=回避，1=設置)
 
@@ -116,12 +116,12 @@ def main():
                 return
             # 設置ターン中の処理
             if event.type == pg.KEYDOWN and turn == 1:
-                if event.key == pg.K_LSHIFT:
-                    bullet = Bullet("fig_ts/bullet_1.png", pl[0].rct.center, 0)
-                    blt_lst[0] += [bullet]
+                if event.key == pg.K_LCTRL:
+                    bullet = Bullet("fig_ts/bullet_1.png", pl[0].rct.center, 0, 0, 2, 0)
+                    pl[0].bullet_lst += [bullet]
                 if event.key == pg.K_RCTRL:
-                    bullet = Bullet("fig_ts/bullet_1.png", pl[1].rct.center, 1)
-                    blt_lst[1] += [bullet]
+                    bullet = Bullet("fig_ts/bullet_2.png", pl[1].rct.center, 1, 1, -2, 0)
+                    pl[1].bullet_lst += [bullet]
                 
         # プレイヤーの更新
         for i in range(2):
@@ -129,15 +129,18 @@ def main():
 
         # 弾の更新
         for i in range(2):
-            for shot in blt_lst[i]:
-                shot.update(scr, turn)
+            for shot in pl[i].bullet_lst:
+                bullet_lst = []
+                bullet_lst = shot.update(scr, pl[i], turn, frame)
+                if bullet_lst != []:
+                    pl[i].bullet_lst += bullet_lst
                 if pl[(i+1)%2].rct.colliderect(shot.rct):
                     return
+                if shot.rct.right < scr.rct.left or shot.rct.right < scr.rct.left:
+                    pl[i].bullet_lst.pop(pl[i].bullet_lst.index(shot))
 
         if frame % 750 == 0:
             turn = (turn+1)%2
-            if turn == 1:
-                blt_lst = [[],[]]
 
         pg.display.update()  # ディスプレイの更新
         frame += 1  # フレームカウントを進める
